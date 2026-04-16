@@ -1,0 +1,65 @@
+
+
+CREATE TABLE mobiles (
+    model TEXT,
+    brand TEXT,
+    price FLOAT,
+    rating FLOAT,
+    ratings_count INT,
+    reviews_count INT,
+    ram INT,
+    rom INT,
+    battery INT,
+    display_inch FLOAT,
+    rear_camera VARCHAR,
+    front_camera VARCHAR,
+    processor VARCHAR
+);
+
+SELECT brand, ROUND(AVG(rating)::numeric,2) AS avg_rating
+FROM mobiles
+GROUP BY brand
+ORDER BY avg_rating DESC;
+
+SELECT brand, COUNT(*) AS total_models
+FROM mobiles
+GROUP BY brand
+ORDER BY total_models DESC;
+
+
+ALTER TABLE mobiles ADD COLUMN price_category TEXT;
+
+UPDATE mobiles
+SET price_category =
+    CASE
+        WHEN price < 10000 THEN 'Budget'
+        WHEN price BETWEEN 10000 AND 20000 THEN 'Mid-range'
+        ELSE 'Premium'
+    END;
+
+
+	SELECT price_category, COUNT(*) AS total_products
+FROM mobiles
+GROUP BY price_category;
+
+
+SELECT price_category, ROUND(AVG(rating)::numeric,2) AS avg_rating
+FROM mobiles
+GROUP BY price_category;
+
+
+SELECT model, brand, reviews_count
+FROM mobiles
+ORDER BY reviews_count DESC
+LIMIT 10;
+
+
+SELECT rating, AVG(reviews_count) AS avg_reviews
+FROM mobiles
+GROUP BY rating
+ORDER BY rating DESC;
+
+SELECT model, brand, price, rating
+FROM mobiles
+WHERE price < 15000 AND rating >= 4.3
+ORDER BY rating DESC;
